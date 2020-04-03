@@ -1,0 +1,95 @@
+DECLARE day:STRING
+DECLARE arrivalTime:INTEGER
+DECLARE duration:INTEGER
+DECLARE fTrue:BOOLEAN
+DECLARE fpn:INTEGER
+DECLARE checkDigit:INTEGER
+DECLARE cost:REAL
+DECLARE rate:INTEGER
+DECLARE forever:INTEGER
+DECLARE dailyTotal:REAL
+DECLARE pricePaid:INTEGER
+DECLARE discount:REAL
+DECLARE hour:INTEGER
+
+dailyTotal <-- 0
+
+forever <-- 0
+
+WHILE forever = 0 DO
+
+  OUTPUT "Input the day"
+  INPUT day
+
+  IF day = "Payment Day" THEN
+    OUTPUT "daily total = ", dailyTotal
+    dailyTotal <-- 0
+    OUTPUT "Input the day"
+    INPUT day
+
+  WHILE day <> "Weekday" and day <> "Saturday" and day <> "Sunday" DO
+    OUTPUT "invalid day!"
+    INPUT day
+  ENDWHILE
+
+  OUTPUT "input arrival time"
+  INPUT arrivalTime
+
+  WHILE arrivalTime < 8 or arrivalTime > 23 DO
+    OUTPUT "invalid time"
+    INPUT arrivalTime
+  ENDWHILE
+
+  IF day = "Weekday" THEN
+    maxHours <-- 2
+    rate <-- 10
+  ELSEIF day = "Sunday" THEN
+    maxHours <-- 8
+    rate <-- 2
+  ELSEIF day = "Saturday" THEN
+    maxHours <-- 4
+    rate <-- 3
+  ENDIF
+
+  OUTPUT "Input duration"
+  INPUT duration
+
+  WHILE duration > maxHours or (arrivalTime + duration) > 24 or duration < 1 DO
+    OUTPUT "invalid duration mate"
+    INPUT duration
+  ENDWHILE
+
+  finTime = arrivalTime + duration
+
+  OUTPUT "u have fpn??? (True/False)"
+  INPUT fTrue
+  IF fTrue = True THEN
+    INPUT fpn
+    checkDigit = fpn MOD 10
+    IF (fpn DIV 10) MOD 11 == checkDigit THEN
+      IF arrivalTime > 16 THEN
+        discount <-- 0.5
+      ELSE:
+        discount = 0.9
+  ENDIF
+
+  FOR hour <-- arrivalTime to finTime
+      IF hour < 16 THEN
+        hoursA <-- hoursA + 1
+      ELSE
+        hoursB <-- hoursB + 1
+  NEXT
+
+  IF hoursB > 0 THEN
+    cost <-- ((hoursA * rate) + 2) * discount
+  ELSE
+    cost <-- (hoursA * rate) * discount
+
+  REPEAT
+    OUTPUT "enter price paid"
+    INPUT pricePaid
+  UNTIL pricePaid > cost
+
+  dailyTotal = dailyTotal + pricePaid
+
+ENDWHILE
